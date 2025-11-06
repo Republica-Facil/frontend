@@ -89,7 +89,12 @@ function Login() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Senha</label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <label htmlFor="password">Senha</label>
+              <Link to="/forgot-password" className="forgot-password-link">
+                Esqueci a senha
+              </Link>
+            </div>
             <input
               type="password"
               id="password"
