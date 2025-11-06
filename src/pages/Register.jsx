@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import api from '../services/api'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome } from '@fortawesome/free-solid-svg-icons'
 import './Auth.css'
@@ -94,21 +94,34 @@ function Register() {
     setLoading(true)
 
     try {
-      const response = await axios.post('http://localhost:8000/users', {
+      // 1. Criar usuário
+      await api.post('/users', {
         fullname: formData.name,
         email: formData.email,
         telephone: formData.phone,
         password: formData.password
       })
 
-      // Salvar token no localStorage
-      localStorage.setItem('token', response.data.token)
-      localStorage.setItem('user', JSON.stringify(response.data.user))
+      // 2. Fazer login para obter o token
+      const loginData = new URLSearchParams()
+      loginData.append('username', formData.email)
+      loginData.append('password', formData.password)
 
-      // Redirecionar para dashboard
+      const loginResponse = await api.post('/auth/login', loginData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+
+      // 3. Salvar token no localStorage
+      localStorage.setItem('access_token', loginResponse.data.access_token)
+      localStorage.setItem('token_type', loginResponse.data.token_type)
+
+      // 4. Redirecionar para dashboard
       navigate('/dashboard')
     } catch (err) {
       setError(
+        err.response?.data?.detail || 
         err.response?.data?.message || 
         'Erro ao criar conta. Tente novamente.'
       )

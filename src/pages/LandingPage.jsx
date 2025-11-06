@@ -1,9 +1,21 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome, faUsers, faClipboardList, faClock, faCheckCircle } from '@fortawesome/free-solid-svg-icons'
+import { useAuth } from '../utils/auth'
 import './LandingPage.css'
 
 function LandingPage() {
+  const navigate = useNavigate()
+  const { isAuthenticated } = useAuth()
+
+  useEffect(() => {
+    // Se já estiver autenticado, redireciona para dashboard
+    if (isAuthenticated) {
+      navigate('/dashboard')
+    }
+  }, [isAuthenticated, navigate])
+
   return (
     <div className="landing-container">
       <header className="header">
