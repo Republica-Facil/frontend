@@ -5,7 +5,7 @@ import api from '../services/api'
 export async function performLogout() {
   try {
     // Tenta fazer logout no backend
-    await api.post('http://localhost:8000/auth/logout')
+    await api.post('/auth/logout')
   } catch (error) {
     console.error('Erro ao fazer logout no backend:', error)
   } finally {

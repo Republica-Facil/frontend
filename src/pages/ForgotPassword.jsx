@@ -58,7 +58,7 @@ function ForgotPassword() {
     setLoading(true)
 
     try {
-      await axios.post('http://localhost:8000/auth/forgot-password', {
+      await axios.post('/api/auth/forgot-password', {
         email: email
       })
 
@@ -81,7 +81,7 @@ function ForgotPassword() {
     setLoading(true)
 
     try {
-      const response = await axios.post('http://localhost:8000/auth/verify-code', {
+      const response = await axios.post('/api/auth/verify-code', {
         email: email,
         code: code
       })
@@ -113,7 +113,7 @@ function ForgotPassword() {
 
     try {
       await axios.patch(
-        'http://localhost:8000/auth/reset-password',
+        '/api/auth/reset-password',
         {
           new_password: password
         },

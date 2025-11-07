@@ -5,6 +5,7 @@ import { faPlus, faEdit, faTrash, faTimes, faUser } from '@fortawesome/free-soli
 
 function MembersSection({ selectedRepublic, onMembersChange }) {
   const [members, setMembers] = useState([])
+  const [rooms, setRooms] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [showModal, setShowModal] = useState(false)
@@ -14,7 +15,8 @@ function MembersSection({ selectedRepublic, onMembersChange }) {
   const [formData, setFormData] = useState({
     fullname: '',
     email: '',
-    telephone: ''
+    telephone: '',
+    quarto_id: ''
   })
   const [formError, setFormError] = useState('')
 
@@ -37,14 +39,28 @@ function MembersSection({ selectedRepublic, onMembersChange }) {
     }
   }
 
+  // Buscar quartos
+  const fetchRooms = async () => {
+    if (!selectedRepublic) return
+
+    try {
+      const response = await api.get(`/quartos/?republica_id=${selectedRepublic}`)
+      setRooms(response.data.quartos || [])
+    } catch (err) {
+      console.error('Erro ao buscar quartos:', err)
+      setRooms([])
+    }
+  }
+
   useEffect(() => {
     fetchMembers()
+    fetchRooms()
   }, [selectedRepublic])
 
   // Abrir modal para adicionar
   const handleAddClick = () => {
     setEditingMember(null)
-    setFormData({ fullname: '', email: '', telephone: '' })
+    setFormData({ fullname: '', email: '', telephone: '', quarto_id: '' })
     setFormError('')
     setShowModal(true)
   }
@@ -55,7 +71,8 @@ function MembersSection({ selectedRepublic, onMembersChange }) {
     setFormData({
       fullname: member.fullname,
       email: member.email,
-      telephone: member.telephone
+      telephone: member.telephone,
+      quarto_id: member.quarto_id || ''
     })
     setFormError('')
     setShowModal(true)
@@ -65,7 +82,7 @@ function MembersSection({ selectedRepublic, onMembersChange }) {
   const handleCloseModal = () => {
     setShowModal(false)
     setEditingMember(null)
-    setFormData({ fullname: '', email: '', telephone: '' })
+    setFormData({ fullname: '', email: '', telephone: '', quarto_id: '' })
     setFormError('')
   }
 
@@ -76,17 +93,31 @@ function MembersSection({ selectedRepublic, onMembersChange }) {
 
     // Validação
     if (!formData.fullname.trim() || !formData.email.trim() || !formData.telephone.trim()) {
-      setFormError('Todos os campos são obrigatórios')
+      setFormError('Nome, email e telefone são obrigatórios')
+      return
+    }
+
+    if (!formData.quarto_id) {
+      setFormError('Selecione um quarto para o membro')
       return
     }
 
     try {
       if (editingMember) {
-        // Editar membro existente
-        await api.put(`/membros/${selectedRepublic}/${editingMember.id}`, formData)
+        // Editar membro existente (sem alterar quarto)
+        await api.put(`/membros/${selectedRepublic}/${editingMember.id}`, {
+          fullname: formData.fullname,
+          email: formData.email,
+          telephone: formData.telephone
+        })
       } else {
-        // Criar novo membro
-        await api.post(`/membros/${selectedRepublic}`, formData)
+        // Criar novo membro (com quarto)
+        await api.post(`/membros/${selectedRepublic}`, {
+          fullname: formData.fullname,
+          email: formData.email,
+          telephone: formData.telephone,
+          quarto_id: parseInt(formData.quarto_id)
+        })
       }
 
       // Recarregar lista
@@ -240,6 +271,45 @@ function MembersSection({ selectedRepublic, onMembersChange }) {
                 />
               </div>
 
+              {!editingMember && (
+                <div className="form-group">
+                  <label htmlFor="quarto_id">Quarto *</label>
+                  <select
+                    id="quarto_id"
+                    value={formData.quarto_id}
+                    onChange={(e) => setFormData({ ...formData, quarto_id: e.target.value })}
+                    required
+                  >
+                    <option value="">Selecione um quarto...</option>
+                    {rooms.map(room => {
+                      const occupant = members.find(m => m.quarto_id === room.id)
+                      return (
+                        <option key={room.id} value={room.id} disabled={!!occupant}>
+                          Quarto {room.numero} {occupant ? `(Ocupado por ${occupant.fullname})` : '(Disponível)'}
+                        </option>
+                      )
+                    })}
+                  </select>
+                  <small className="form-hint">
+                    Quartos ocupados não podem ser selecionados.
+                  </small>
+                </div>
+              )}
+
+              {editingMember && (
+                <div className="form-group">
+                  <label>Quarto Atual</label>
+                  <input
+                    type="text"
+                    value={formData.quarto_id ? `Quarto ${rooms.find(r => r.id === formData.quarto_id)?.numero || formData.quarto_id}` : 'Sem quarto'}
+                    readOnly
+                  />
+                  <small className="form-hint">
+                    Use a seção "Quartos" para transferir o membro para outro quarto.
+                  </small>
+                </div>
+              )}
+
               <div className="modal-footer">
                 <button type="button" className="btn-cancel" onClick={handleCloseModal}>
                   Cancelar
@@ -277,40 +347,45 @@ function MembersSection({ selectedRepublic, onMembersChange }) {
                 <th>Nome</th>
                 <th>Email</th>
                 <th>Telefone</th>
+                <th>Quarto</th>
                 <th>Ações</th>
               </tr>
             </thead>
             <tbody>
-              {members.map((member) => (
-                <tr key={member.id}>
-                  <td>
-                    <div className="member-name">
-                      <FontAwesomeIcon icon={faUser} style={{ marginRight: '0.5rem', color: '#0050C3' }} />
-                      {member.fullname}
-                    </div>
-                  </td>
-                  <td>{member.email}</td>
-                  <td>{member.telephone}</td>
-                  <td>
-                    <div className="action-buttons">
-                      <button
-                        className="btn-icon btn-edit"
-                        onClick={() => handleEditClick(member)}
-                        title="Editar"
-                      >
-                        <FontAwesomeIcon icon={faEdit} />
-                      </button>
-                      <button
-                        className="btn-icon btn-delete"
-                        onClick={() => handleDeleteClick(member)}
-                        title="Excluir"
-                      >
-                        <FontAwesomeIcon icon={faTrash} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+              {members.map((member) => {
+                const room = rooms.find(r => r.id === member.quarto_id)
+                return (
+                  <tr key={member.id}>
+                    <td>
+                      <div className="member-name">
+                        <FontAwesomeIcon icon={faUser} style={{ marginRight: '0.5rem', color: '#0050C3' }} />
+                        {member.fullname}
+                      </div>
+                    </td>
+                    <td>{member.email}</td>
+                    <td>{member.telephone}</td>
+                    <td>{room ? `Quarto ${room.numero}` : 'Sem quarto'}</td>
+                    <td>
+                      <div className="action-buttons">
+                        <button
+                          className="btn-icon btn-edit"
+                          onClick={() => handleEditClick(member)}
+                          title="Editar"
+                        >
+                          <FontAwesomeIcon icon={faEdit} />
+                        </button>
+                        <button
+                          className="btn-icon btn-delete"
+                          onClick={() => handleDeleteClick(member)}
+                          title="Excluir"
+                        >
+                          <FontAwesomeIcon icon={faTrash} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>

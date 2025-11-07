@@ -34,7 +34,7 @@ function Login() {
         password: formData.password
       })
 
-      const response = await axios.post('http://localhost:8000/auth/login', formBody, {
+      const response = await axios.post('/api/auth/login', formBody, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         }

@@ -36,7 +36,7 @@ function RepublicsList({ republicas, selectedRepublic, onSelectRepublic, onCreat
                   <p>{memberCount} {memberCount === 1 ? 'membro' : 'membros'}</p>
                 </div>
                 <div className="republic-actions">
-                  <button className="btn-view">Ver Dashboard</button>
+                  <button className="btn-view-dashboard">Ver Dashboard</button>
                 </div>
               </div>
             )

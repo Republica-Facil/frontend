@@ -2,21 +2,21 @@
 
 Frontend da aplicação República Fácil, desenvolvido em React com Vite.
 
-## 🚀 Tecnologias
+## Tecnologias
 
-- React 18
-- Vite
-- React Router DOM
-- Axios
+- React 18.3.1
+- Vite 5.4.10
+- React Router DOM 6.28.0
+- Axios 1.7.7
 - Font Awesome
 
-## 📦 Instalação
+## Instalação
 
 ```bash
 npm install
 ```
 
-## 🏃‍♂️ Executar
+## Executar o Projeto
 
 ```bash
 npm run dev
@@ -24,40 +24,19 @@ npm run dev
 
 O aplicativo estará disponível em `http://localhost:3000`
 
-## 🔧 Configuração
+**Nota:** O backend deve estar rodando em `http://localhost:8000`
 
-O backend deve estar rodando em `http://localhost:8000`
-
-## 📄 Páginas
-
-### Públicas
-- `/` - Landing Page (redireciona para dashboard se autenticado)
-- `/login` - Página de Login (redireciona para dashboard se autenticado)
-- `/register` - Página de Registro (redireciona para dashboard se autenticado)
-- `/forgot-password` - Recuperação de Senha (3 passos: email, código, nova senha)
-
-### Protegidas (requer autenticação)
-- `/dashboard` - Dashboard principal (redireciona para login se não autenticado)
-
-## 🔐 Sistema de Autenticação
-
-### Armazenamento de Token
-O token de acesso é armazenado no `localStorage`:
-- `access_token`: Token JWT do backend
-- `token_type`: Tipo do token (Bearer)
-
-### Proteção de Rotas
-- **PublicRoute**: Rotas que redirecionam para `/dashboard` se já estiver autenticado
-- **PrivateRoute**: Rotas que redirecionam para `/login` se não estiver autenticado
-
-### Interceptors Axios
-- Adiciona automaticamente o token em todas as requisições
-- Redireciona para login se receber erro 401 (não autorizado)
-
-## 🎨 Estrutura
+## Estrutura do Projeto
 
 ```
 src/
+├── components/
+│   └── Dashboard/
+│       ├── DashboardContent.jsx
+│       ├── ExpensesSection.jsx
+│       ├── PaymentsSection.jsx
+│       ├── ReportsSection.jsx
+│       └── index.js
 ├── pages/
 │   ├── LandingPage.jsx
 │   ├── LandingPage.css
@@ -67,21 +46,37 @@ src/
 │   ├── Dashboard.jsx
 │   ├── Dashboard.css
 │   └── Auth.css
-├── utils/
-│   └── auth.jsx          # Hooks e componentes de autenticação
 ├── services/
-│   └── api.js            # Configuração do Axios com interceptors
+│   └── api.js
+├── utils/
+│   └── auth.jsx
 ├── App.jsx
 ├── main.jsx
 └── index.css
 ```
 
-## 🔑 Fluxo de Autenticação
+## Rotas
 
-1. **Login**: Email + Senha → Token armazenado → Redireciona para dashboard
-2. **Registro**: Dados do usuário → Token armazenado → Redireciona para dashboard
-3. **Recuperação de Senha**:
-   - Passo 1: Email → Código enviado
-   - Passo 2: Código → Token temporário
-   - Passo 3: Nova senha → Redireciona para login
-4. **Logout**: Remove token → Redireciona para login
+### Públicas
+- `/` - Landing Page
+- `/login` - Página de Login
+- `/register` - Página de Registro
+- `/forgot-password` - Recuperação de Senha
+
+### Protegidas
+- `/dashboard` - Dashboard Principal
+
+## Funcionalidades
+
+### Autenticação
+- Login com email e senha
+- Registro de novos usuários
+- Recuperação de senha (3 etapas)
+- Logout
+
+### Dashboard
+- Gestão de Despesas (criar, visualizar, filtrar, pagar)
+- Controle de Pagamentos
+- Relatórios Financeiros
+- Exportação de dados em CSV
+
