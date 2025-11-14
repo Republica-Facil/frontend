@@ -80,3 +80,25 @@ src/
 - Relatórios Financeiros
 - Exportação de dados em CSV
 
+## Testes Automatizados
+
+Testes E2E usando Selenium WebDriver para validar os principais fluxos da aplicação.
+
+### Instalação
+
+```bash
+pip install selenium webdriver-manager
+```
+
+### Executar Testes
+
+```bash
+# Teste completo (cadastro, república, quarto, membro, despesa, pagamento, CSV)
+python3 test/test_selenium.py
+
+# Teste de login e autenticação
+python3 test/test_login_selenium.py
+```
+
+**Importante:** O servidor deve estar rodando em `http://127.0.0.1:3000` antes de executar os testes.
+
