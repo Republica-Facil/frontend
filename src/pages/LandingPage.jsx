@@ -39,7 +39,7 @@ function LandingPage() {
           </h1>
           <p>
             Diga adeus às planilhas e discussões sobre dinheiro. Rastreie despesas, 
-            divida contas automaticamente e mantenha todos informados.
+            divida contas automaticamente e mantenha tudo sobre controle.
           </p>
           <div className="hero-buttons">
             <Link to="/register" className="btn btn-primary btn-large">
@@ -70,7 +70,7 @@ function LandingPage() {
             </div>
             <div className="feature-step">Passo 1</div>
             <h3>Crie Sua República</h3>
-            <p>Configure sua república e convide todos os membros com um código simples.</p>
+            <p>Configure sua república e adicione todos os membros para manter tudo sobre controle.</p>
           </div>
           <div className="feature-card">
             <div className="feature-icon">
@@ -93,8 +93,8 @@ function LandingPage() {
               <FontAwesomeIcon icon={faCheckCircle} />
             </div>
             <div className="feature-step">Passo 4</div>
-            <h3>Acompanhe Pagamentos</h3>
-            <p>Membros confirmam pagamentos e o painel atualiza em tempo real.</p>
+            <h3>Confirme Pagamentos</h3>
+            <p>Adicione a confirmação de pagamento dos membros e o painel já atualiza em tempo real.</p>
           </div>
         </div>
       </section>

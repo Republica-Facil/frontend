@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-// Usar o proxy do Vite em desenvolvimento
-const API_BASE_URL = import.meta.env.PROD ? 'http://localhost:8000' : '/api'
+// Usar variável de ambiente se disponível, senão usa proxy em dev ou localhost como fallback
+const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'http://localhost:8000' : '/api')
 
 // Criar instância do axios com configurações padrão
 const api = axios.create({
