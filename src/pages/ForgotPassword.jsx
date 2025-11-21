@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import api from '../services/api'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome } from '@fortawesome/free-solid-svg-icons'
 import './Auth.css'
@@ -58,7 +58,7 @@ function ForgotPassword() {
     setLoading(true)
 
     try {
-      await axios.post('/api/auth/forgot-password', {
+      await api.post('/auth/forgot-password', {
         email: email
       })
 
@@ -81,7 +81,7 @@ function ForgotPassword() {
     setLoading(true)
 
     try {
-      const response = await axios.post('/api/auth/verify-code', {
+      const response = await api.post('/auth/verify-code', {
         email: email,
         code: code
       })
@@ -112,8 +112,8 @@ function ForgotPassword() {
     setLoading(true)
 
     try {
-      await axios.patch(
-        '/api/auth/reset-password',
+      await api.patch(
+        '/auth/reset-password',
         {
           new_password: password
         },
