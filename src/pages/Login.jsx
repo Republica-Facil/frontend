@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import api from '../services/api'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome } from '@fortawesome/free-solid-svg-icons'
 import './Auth.css'
@@ -34,7 +34,7 @@ function Login() {
         password: formData.password
       })
 
-      const response = await axios.post('/api/auth/login', formBody, {
+      const response = await api.post('/auth/login', formBody, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
