@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome, faUsers, faClipboardList, faClock, faCheckCircle } from '@fortawesome/free-solid-svg-icons'
 import { useAuth } from '../utils/auth'
 import './LandingPage.css'
+import imagemRepublica from '/assets/imagem_republica.png'
 
 function LandingPage() {
   const navigate = useNavigate()
@@ -51,7 +52,7 @@ function LandingPage() {
         </div>
         <div className="hero-image">
           <img 
-            src="/src/assets/imagem_republica.png" 
+            src={imagemRepublica} 
             alt="Grupo de amigos em uma república" 
           />
         </div>
