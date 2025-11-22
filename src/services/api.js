@@ -45,7 +45,7 @@ api.interceptors.response.use(
       if (!window.location.pathname.includes('/login') && 
           !window.location.pathname.includes('/register') &&
           !window.location.pathname.includes('/forgot-password')) {
-        window.location.href = '/login'
+        window.location.href = 'https://frontend-pcnq.onrender.com/login'
       }
     }
     return Promise.reject(error)

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import api from '../services/api'
+import api, { API_BASE_URL } from '../services/api'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome } from '@fortawesome/free-solid-svg-icons'
 import './Auth.css'
@@ -60,6 +60,8 @@ function ForgotPassword() {
     try {
       await api.post('/auth/forgot-password', {
         email: email
+      }, {
+        baseURL: API_BASE_URL
       })
 
       setSuccess('Um código de verificação foi enviado para seu email.')
@@ -84,6 +86,8 @@ function ForgotPassword() {
       const response = await api.post('/auth/verify-code', {
         email: email,
         code: code
+      }, {
+        baseURL: API_BASE_URL
       })
 
       // Salvar token temporário
@@ -118,6 +122,7 @@ function ForgotPassword() {
           new_password: password
         },
         {
+          baseURL: API_BASE_URL,
           headers: {
             'Authorization': `Bearer ${tempToken}`
           }
