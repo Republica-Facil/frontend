@@ -3,6 +3,10 @@ import axios from 'axios'
 // Usar variável de ambiente se disponível, senão usa proxy em dev ou localhost como fallback
 const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'http://localhost:8000' : '/api')
 
+console.log('API_BASE_URL configurada:', API_BASE_URL)
+console.log('VITE_API_URL:', import.meta.env.VITE_API_URL)
+console.log('PROD mode:', import.meta.env.PROD)
+
 // Criar instância do axios com configurações padrão
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -36,7 +40,13 @@ api.interceptors.response.use(
       // Token inválido ou expirado
       localStorage.removeItem('access_token')
       localStorage.removeItem('token_type')
-      window.location.href = '/login'
+      
+      // Só redireciona se não estiver já na página de login
+      if (!window.location.pathname.includes('/login') && 
+          !window.location.pathname.includes('/register') &&
+          !window.location.pathname.includes('/forgot-password')) {
+        window.location.href = '/login'
+      }
     }
     return Promise.reject(error)
   }
